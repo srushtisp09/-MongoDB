@@ -1,0 +1,172 @@
+## MongoDB 
+THE SHELL
+we will use shell to operate the crud operations:
+C-create/insert
+R-read/find
+U-update
+D-delete 
+mongosh //to start
+use college //to create and use a new database called "college"
+help command- prints all the commands 
+show dbs- shows all the databases
+exit- use to get out of the mongoshell
+mongoshell is a type of javascript shell
+mongodb creates a temporary database called test
+
+ for mongo the database will become permanent whenone adds data into it
+ db command-shows the current database
+
+ BSON:
+ BINARY JSON
+ bson data is binary representation of json data json data is human understandable while bson data  is machine understandable we input the machine with key object format data it converts to bson 
+
+ ## COLLECTIONS:
+ DOCUMENT:Mongo stores data in form of documents(BSON docs).
+
+ collection: Mongodb stores document in collections .
+
+## INSERT IN DB:
+db.collection.insertOne()   inserts a single document into a collection( also mongodb creates a colection if the collections is not existing)
+show collections
+
+ db.collection.insertOne({name:"adam",marks:79}) inserts a single document into a collection
+
+db.student.find() - to find the collection
+
+INSERT IN DB:
+insertMany (array of documents)
+db.student.insertMany([{name:"bob",marks:65},{name:"eve",city:"Delhi"}])
+db.collections.insertMany() --->inserts multipke documents into a collection
+
+
+
+ ## FIND in DB
+ db.collection.find() //returns everything
+ for specific queries
+ db.collection.find({key:value}) -----returns a cursor cursor refers to a refrence (only the object)
+ db.collection.findOne({key:value}) ----- returns actual document (it returns array containing object)
+ db.student.find({city:"Delhi,marks:32}) if u enter this u will get the object whose
+ city is delhi and marks is 32
+
+ Q1: Find students where marks>75
+ db.student.find({marks:{$gt:75}}) 
+$gt -- this represents greater than 
+$gte-- this represents greater than equal to
+
+ Q2: Find students who live in delhi or Mumbai
+ db.student.find({city:{$in:["Delhi","Mumbai"]}})
+$in -- represents city in delhi ya mumbai 
+
+
+ Q3: Find students who scored>75 or live in Delhi
+ $or db.student.find({$or:[{marks:{$gt:43}},{city:"delhi"}]}) 
+$or: represnts the or condition either of the condition gets true then consider that
+
+## UPDATE  Methods
+There are many update operators in mongodb
+$addFields -- to add and extra field
+$set -- to update the field 
+$project 
+$sunset
+$replaceRoot
+$replaceWith
+refer operators in mongodb 
+db.student.updateOne({name:"adam"},{$set:{marks:99}})
+db.student.updateMany({city:"Delhi"},{$set:{city:"New Delhi"}})
+db.student.replaceOne({name:"bob},{name:"shraddha",marks:98,state:"Haryana"})
+over here when u do replaceOne using the name then the entire object gets replaced not just the name 
+also when ur setting  the new value u should use the same name
+as that of what u entered if u have used Mumbai then while replace u have to use Mumbai
+
+
+## Nesting :
+an object inside an object :
+how to insert an object inside an  object an object already exists we r adding another object into it:
+db.student.insertOne({name:"farah",performance:{marks:88,grade:"A"}})
+this creates a nested object
+db.student.find({"performance.marks":88})
+
+
+## DELETE in DB
+deleteOne
+db.collection.deleteOne(<filter>,<options>)
+
+deleteMany
+db.collection.deleteMany(<filter>,<options>)
+
+db.collection.deleteMany(<filter>,<options>)
+
+db.dropDatabase()
+
+ex:
+db.student.deleteOne({state:"Haryana"})
+
+this deletes the state with Haryana
+db.student.deleteMany({marks:{$lt:75}})
+this deletes the students whose marks are less than 75
+
+to delete the entire database
+db.dropDatabase()
+
+
+db.student.deleteMany({}) : no conditions applied delete all this deletes the
+records not the entire database
+
+##PART2:
+MONGODB:  
+Mongoose:  a library from npm .A library that creates a connection between Mongodb and Node.js javascript runtime environment
+ mongoshell performs all the task that mongoose performs
+ but we cannot use mongoshell for our apps or complex queries instead we choose mongoose that helps us create a schemas and handle complex queries. 
+it is an odm (object data modelling) library--The Object-Oriented Data Model (OODM) in DBMS represents data as objects that encapsulate both data (attributes) and the behavior (methods) associated with them.
+objects that encapsulate both data (attributes) and the behavior (methods) associated with them. Unlike traditional Relational Databases (RDBMS) which store information in tables, rows, and columns, an OODM bridges the gap between database systems and object-oriented programming (OOP) languages like Java, C++, or Python. It allows the direct storage of complex real-world entities and rich media formats (such as audio, video, and images) natively.
+modelling --> models-->  the word model refers to an abstract framework or blueprint that defines how data is structured, stored, manipulated, and conceptualised.
+
+to use mongoose:
+first run this command : to start ur mongodb community:sudo brew services start mongodb-community@7.0
+and then use mongosh 
+this starts mongo shell
+we open visual studio code and then download npm init -y and all create three packages node_modules,index,js,package-lock.json,package.json
+before using mongoose we need to require it:
+const mongoose=require("mongoose");
+mongoose.connect(("mongodb://127.0.0.1:27017/test"));
+the above line is used to connect the index.js file to the database
+then run the file node index.js
+u get nothing the code gets stuck  so when u get into it the mogodb keeps waiting for commands
+mongoose.connect is a asynchronous function it returns a promise we use then function
+
+
+main().then(()=>{
+    console.log("connection successfull");
+})
+.catch(err => console.log(err));
+
+async function main() {
+  await mongoose.connect('mongodb://127.0.0.1:27017/test');
+
+  // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
+}
+
+ whatever is written up with connect is same as that of the code that is pasted above its just that over here we are dealing with asynchronous function 
+then run it u get connection successfull
+once the connection of js and mongodb is done then we can start creating crud operations
+
+## SCHEMA
+schema defines the shape of teh documents within that collections
+const userSchema = new mongoose.Schema({
+    name:String,
+    email:String,
+    age:Number,
+})
+Schema:overall structure table,columns,constraints ,datatype
+schema for collection means every document and collection should follow that schema
+
+schema refers to the blueprint
+
+## Models:
+model in mongoose is a class with which we construct documents
+const user=mongoose.model("user",userSchema);
+the name that u give to collection is same as that of ur model .
+the use is ur model name ans user in double quotation is ur
+collection name and userschema is ur schema name
+when u give name User it becomes users from singular to plural
+always give name to ur collection in singular and let ur model name and collection name be same
