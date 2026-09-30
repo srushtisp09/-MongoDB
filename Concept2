@@ -1,0 +1,109 @@
+ ## INSERT IN MONGOOSE
+ inserting one
+ const user1=new User({name:"Adam",email:"adam@yahoo",age:48});
+ after writing this it wont save by itself will have to save it it just gets created
+ .load index.js
+ it saves and then when u do user1
+ u get a special id which is created by mongoose
+ save() method is model which is asynchronous
+ user1.save().then(res=>{
+    console.log(res);
+ }) 
+ .catch((err)=>{
+    console.log(err)
+ })
+  const user2=new User({name:"Eve",email:"eve@google.com",age:78});
+ 
+user2.save()
+
+INSERT MULTIPLE:
+User.insertMany([
+    {
+        name:"Tony",email:"tony@gmail.com",age:50
+    },{
+        name:"Riya",email:"riya@gmail.com",age:60
+    }
+]).then((res)=>{
+    console.log(res);
+});
+
+mongoose uses operation buffering:mongoose lets you start
+ using your models immediately,without waiting for mongoose to establish 
+ a connction to MongoDB.
+
+FIND:it doesnt return a promise it returns a query object
+1.model.find()
+
+2.model.findOne()
+using model.findOne({ you_can_add_ur_id_also_here})
+
+3.model.findById("")
+
+## Update:
+model.updateOne()
+User.updateOne({name:"Bruce"},{age:67}).the((res)=>{
+    console.log(res);
+})
+.catch(err)=>{
+    console.log(err);
+}
+
+
+user.updateMany({age:{$gt:43}},{age:99})
+.then((res)=>{
+    console.log(res);
+})
+.catch(err)=>{
+    console.log(err)
+}
+
+other methods:
+model.findOneAndUpdate({age:{$gt:45}},{age:45}).then((res)=>{
+    console.log(res);
+})
+model.findByandUpdate()
+
+DELETE:
+user.deleteOne({name:"bruce"}).then((res)=>{
+    console.log(res);
+});
+
+user.deleteMany({age:48}).then((res)=>{
+    console.log(res);
+})
+model.findByIdAndDelete()
+model.findOneAndDelete()
+
+
+##SCHEMA VALIDATION
+basically rules for schema
+const bookSchema=mongoose.Schema({
+    title:{
+        type:String,
+        required:true,=> it is similiar to that of not null constarint in sql
+    },
+    author:{
+        type:String,
+    },
+    price:{
+        type:Number,
+    },
+    discount:{
+        type:Number,
+        default:0
+    }
+
+    
+});
+
+SCHEMA TYPE options:
+we can declare the type using the schema directly
+
+Schema validation with update:runValidators: true is an option used to enforce schema validation during update queries. By default, Mongoose automatically runs validators when you use .save() or .create(), but skips them during update operations like updateOne(), updateMany(), or findOneAndUpdate()
+Passing { runValidators: true } ensures that any new data being sent to the database conforms to your schema definitions
+
+handling error:
+console.log(err.errors.category.properties.message);
+
+
+
